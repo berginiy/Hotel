@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Grand Hotel — Выселение</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+        --gold: #C9A84C;
+        --gold-light: #E8C96D;
+        --dark: #0F0F0F;
+        --dark2: #1A1A1A;
+        --dark3: #252525;
+        --text: #E8E4DC;
+        --text-muted: #8A8480;
+        --green: #4CAF7D;
+        --red: #E05252;
+        --border: rgba(201,168,76,0.2);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
+
+    .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: var(--dark2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 32px 0; z-index: 100; }
+    .logo { padding: 0 28px 32px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .logo-icon { font-size: 1.8rem; margin-bottom: 6px; }
+    .logo h1 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); line-height: 1.2; font-weight: 600; }
+    .logo span { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+    nav { flex: 1; padding: 0 16px; }
+    nav a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px; transition: all 0.2s; }
+    nav a:hover { color: var(--text); background: var(--dark3); }
+    nav a.active { color: var(--gold); background: rgba(201,168,76,0.1); }
+    nav a .icon { font-size: 1.1rem; width: 20px; text-align: center; }
+    .sidebar-footer { padding: 20px 28px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted); }
+
+    .main { margin-left: 240px; min-height: 100vh; }
+    .topbar { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 20px 40px; }
+    .topbar h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; }
+
+    .content { padding: 36px 40px; display: flex; justify-content: center; }
+
+    .form-card {
+        background: var(--dark2);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 40px;
+        width: 100%;
+        max-width: 520px;
+        position: relative;
+        overflow: hidden;
+    }
+    .form-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--red), transparent);
+    }
+
+    .form-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 8px; }
+    .form-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 32px; }
+
+    .form-group { margin-bottom: 22px; }
+    label { display: block; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    select {
+        width: 100%;
+        padding: 13px 16px;
+        background: var(--dark3);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 8px;
+        color: var(--text);
+        font-size: 0.95rem;
+        font-family: 'DM Sans', sans-serif;
+        transition: border-color 0.2s;
+        outline: none;
+        appearance: none;
+    }
+    select:focus { border-color: var(--red); }
+    select option { background: var(--dark3); }
+
+    .btn-preview {
+        width: 100%;
+        padding: 13px;
+        background: var(--dark3);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 500;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer;
+        margin-bottom: 12px;
+        transition: all 0.2s;
+    }
+    .btn-preview:hover { border-color: var(--gold); color: var(--gold); }
+
+    .btn-submit {
+        width: 100%;
+        padding: 14px;
+        background: rgba(224,82,82,0.15);
+        border: 1px solid rgba(224,82,82,0.4);
+        border-radius: 8px;
+        color: #F08080;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-submit:hover { background: rgba(224,82,82,0.25); }
+
+    .booking-info {
+        background: var(--dark3);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+    .booking-info-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--gold);
+        margin-bottom: 20px;
+    }
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        font-size: 0.9rem;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: var(--text-muted); }
+    .info-value { font-weight: 500; }
+    .total-row {
+        margin-top: 8px;
+        padding-top: 16px !important;
+        border-top: 1px solid var(--border) !important;
+    }
+    .total-row .info-label { color: var(--text); font-weight: 500; }
+    .total-row .info-value {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        color: var(--gold);
+    }
+
+    .back-link { display: block; text-align: center; margin-top: 20px; color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    .back-link:hover { color: var(--gold); }
+
+    .empty-msg { text-align: center; padding: 40px 0; color: var(--text-muted); }
+    .empty-msg .emoji { font-size: 3rem; margin-bottom: 12px; }
+
+    .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 24px; font-size: 0.88rem; }
+    .alert-error { background: rgba(224,82,82,0.12); border: 1px solid rgba(224,82,82,0.3); color: #F08080; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🏨</div>
+    <h1>Grand Hotel</h1>
+    <span>Management</span>
+  </div>
+  <nav>
+    <a href="/"><span class="icon">🏠</span> Номера</a>
+    <a href="/checkin"><span class="icon">➕</span> Заселение</a>
+    <a href="/checkout" class="active"><span class="icon">🚪</span> Выселение</a>
+    <a href="/history"><span class="icon">📋</span> История</a>
+  </nav>
+  <div class="sidebar-footer">Grand Hotel System v2.0</div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <h2>Выселение клиента</h2>
+  </div>
+  <div class="content">
+    <div class="form-card">
+      <div class="form-title">Оформить выезд</div>
+      <div class="form-subtitle">Выберите номер для выселения гостя</div>
+
+      <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+      <div th:if="${occupiedRooms.empty}" class="empty-msg">
+        <div class="emoji">✨</div>
+        <p>Нет занятых номеров</p>
+      </div>
+
+      <div th:if="${!occupiedRooms.empty}">
+        <form action="/checkout/details" method="get">
+          <div class="form-group">
+            <label for="roomId">Занятый номер</label>
+            <select id="roomId" name="roomId" required>
+              <option value="">— Выберите номер —</option>
+              <option th:each="room : ${occupiedRooms}"
+                      th:value="${room.id}"
+                      th:selected="${room.id == selectedRoomId}"
+                      th:text="'№ ' + ${room.roomNumber} + '  —  ' + ${room.pricePerDay} + ' ₽/день'">
+              </option>
+            </select>
+          </div>
+          <button type="submit" class="btn-preview">Показать информацию о госте</button>
+        </form>
+
+        <div th:if="${booking}" class="booking-info">
+          <div class="booking-info-title">Информация о проживании</div>
+          <div class="info-row">
+            <span class="info-label">Гость</span>
+            <span class="info-value" th:text="${booking.clientName}"></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Номер</span>
+            <span class="info-value" th:text="'№ ' + ${booking.room.roomNumber}"></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Дата заезда</span>
+            <span class="info-value" th:text="${#temporals.format(booking.checkInDate, 'dd.MM.yyyy HH:mm')}"></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Количество дней</span>
+            <span class="info-value" th:text="${booking.days} + ' дн.'"></span>
+          </div>
+          <div class="info-row total-row">
+            <span class="info-label">К оплате</span>
+            <span class="info-value" th:text="${booking.totalPrice} + ' ₽'"></span>
+          </div>
+        </div>
+
+        <form th:if="${booking}" action="/checkout" method="post">
+          <input type="hidden" name="roomId" th:value="${selectedRoomId}">
+          <button type="submit" class="btn-submit">🚪 Выселить и принять оплату</button>
+        </form>
+      </div>
+
+      <a href="/" class="back-link">← Вернуться к списку номеров</a>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
