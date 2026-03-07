@@ -31,6 +31,6 @@ Allows the administrator to check-in / check-out guests, calculate accommodation
 - Spring Data JPA + Hibernate  
 - Thymeleaf + Bootstrap 5  
 - Maven  
-- База данных: H2 (in-memory) / MySQL  
+- База данных: PostgreSQL  
 - Lombok  
 ```
