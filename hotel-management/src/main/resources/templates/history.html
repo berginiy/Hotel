@@ -179,13 +179,11 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Выселено гостей</div>
-                <div class="stat-value"
-                     th:text="${bookings.stream().filter(b -> b.checkOutDate != null).count()}">0</div>
+                <div class="stat-value" th:text="${checkedOutCount}">0</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Общая выручка</div>
-                <div class="stat-value"
-                     th:text="${#numbers.formatDecimal(bookings.stream().filter(b -> b.checkOutDate != null).map(b -> b.totalPrice).reduce(T(java.math.BigDecimal).ZERO, (a, b) -> a.add(b)), 0, 'POINT', 0, 'COMMA')} + ' ₽'">0 ₽</div>
+                <div class="stat-value" th:text="${totalRevenue} + ' ₽'">0 ₽</div>
             </div>
         </div>
 

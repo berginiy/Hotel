@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -74,7 +75,20 @@ public class HotelController {
 
     @GetMapping("/history")
     public String history(Model model) {
-        model.addAttribute("bookings", hotelService.getAllBookings());
+        List<Booking> bookings = hotelService.getAllBookings();
+        model.addAttribute("bookings", bookings);
+
+        long checkedOutCount = bookings.stream()
+                .filter(b -> b.getCheckOutDate() != null)
+                .count();
+
+        BigDecimal totalRevenue = bookings.stream()
+                .filter(b -> b.getCheckOutDate() != null)
+                .map(Booking::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        model.addAttribute("checkedOutCount", checkedOutCount);
+        model.addAttribute("totalRevenue", totalRevenue);
         return "history";
     }
 }
