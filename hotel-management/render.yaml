@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: hotel-management
+    env: java
+    plan: free
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/hotel-management-0.0.1-SNAPSHOT.jar
+
+databases:
+  - name: hotel-db
+    plan: free
+    databaseName: hotel_db
+    user: hotel_user
